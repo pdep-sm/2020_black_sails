@@ -47,4 +47,5 @@ object canion {
 	method fabricar() = new Canion(danioFabricacion = danioActual)
 }
 
+const espadaDesafilada = new Espada(danio = 1)
 

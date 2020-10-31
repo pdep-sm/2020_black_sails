@@ -19,13 +19,22 @@ class Embarcacion {
 	method puedeEntrarEnConflicto(otraEmbarcacion) = 
 			ubicacion.estaCerca(otraEmbarcacion.ubicacion())
 			
-	method tieneHabilNegociador() = 
-		self.totalTripulacion().any { tripulante => tripulante.esInteligente() }
-		
 	/** Otra idea para el punto 4 */
 	method puedeVencer(otraEmbarcacion, contienda) = 
 		self.puedeEntrarEnConflicto(otraEmbarcacion) && 
 			contienda.puedeVencer(self, otraEmbarcacion)
+			
+	/** Punto 5 */
+	method realizarMotin() {
+		if (self.puedeRealizarseMotinConExito())
+			self.realizarMotinConExito()			
+		else 
+			self.realizarMotinSinExito()
+	}			
+			
+	/** Metodos privados (?) -------------------------------------- */		
+	method tieneHabilNegociador() = 
+		self.totalTripulacion().any { tripulante => tripulante.esInteligente() }
 		
 	method aumentarBotin(modificacionBotin) {
 		botin += modificacionBotin
@@ -63,12 +72,29 @@ class Embarcacion {
 		self.eliminarTripulantes([contramaestre])
 	}
 	
-	/** Metodos privados (?) -------------------------------------- */
 	method totalTripulacion() = #{ capitan, contramaestre } + tripulantes
 	
 	method corajeTotal() = self.totalTripulacion().sum{ tripulante => tripulante.coraje() } 
 	
-	method danioCaniones() = caniones.sum{ canion => canion.danio() }
+	method danioCaniones() = caniones.sum{ unCanion => unCanion.danio() }
+
+	method descenderTripulante(pirata) {
+		pirata.reemplazarTodasLasArmas([espadaDesafilada])
+		self.agregarTripulantes([pirata])
+	}
+	
+	method puedeRealizarseMotinConExito() = capitan.coraje() < contramaestre.coraje()
+	
+	method realizarMotinConExito() {
+		capitan = contramaestre
+		self.promoverMasCorajudo()
+	}
+	
+	method realizarMotinSinExito() {
+		const pirata = contramaestre
+		self.promoverMasCorajudo()
+		self.descenderTripulante(pirata)
+	}			
 
 }
 
@@ -87,6 +113,11 @@ class Tripulante {
 	
 	method aumentarCoraje(cantidad) {
 		corajeBase += cantidad	
+	}
+	
+	method reemplazarTodasLasArmas(nuevasArmas) {
+		armas.clear()
+		armas.addAll(nuevasArmas)
 	}
 	
 }
