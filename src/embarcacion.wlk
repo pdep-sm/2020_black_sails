@@ -47,6 +47,10 @@ class Embarcacion {
 	method aumentarCoraje(cantidad) {
 		self.totalTripulacion().forEach{ tripulante => tripulante.aumentarCoraje(cantidad)}
 	}
+	
+	method reducirCoraje(cantidad) {
+		self.aumentarCoraje(cantidad.invert())
+	}
 		
 	method eliminarMasCobardes(cantidad) {
 		const cobardes = self.tripulantesPorCoraje().reverse().take(cantidad)
@@ -94,7 +98,15 @@ class Embarcacion {
 		const pirata = contramaestre
 		self.promoverMasCorajudo()
 		self.descenderTripulante(pirata)
-	}			
+	}		
+	
+	method deteriorarCaniones(anios) {
+		caniones.forEach { unCanion => unCanion.deteriorar(anios) }
+	}	
+	
+	method eliminarMasCorajudos(cantidad) {
+		self.eliminarTripulantes(self.masCorajudos(cantidad))
+	}
 
 }
 

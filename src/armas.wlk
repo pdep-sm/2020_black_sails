@@ -38,6 +38,10 @@ class Canion {
 	var edad = 0
 	
 	method danio() = danioFabricacion * (1 - edad / 100)
+	
+	method deteriorar(anios) {
+		edad += anios
+	}
 }
 
 // Object Companion 
